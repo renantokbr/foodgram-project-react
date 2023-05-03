@@ -1,4 +1,3 @@
-
 from django.db.models import F, Sum
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import decorators, generics, response, status, viewsets

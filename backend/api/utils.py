@@ -2,7 +2,6 @@ import csv
 from datetime import datetime as dt
 
 from django.http.response import HttpResponse
-
 from recipe.models import IngredientAmount
 
 
