@@ -1,18 +1,13 @@
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
+from rest_framework import relations, serializers, validators
 from rest_framework.fields import ReadOnlyField
-from rest_framework import serializers, relations, validators
 
 from api.utils import set_of_ingredients
-from recipe.models import (
-    Ingredient,
-    Recipe,
-    Tag,
-    Favorites,
-    Carts,
-    IngredientAmount)
-from users.models import User, Subscriptions
+from recipe.models import (Carts, Favorites, Ingredient, IngredientAmount,
+                           Recipe, Tag)
+from users.models import Subscriptions, User
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
