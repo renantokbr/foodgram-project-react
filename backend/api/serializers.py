@@ -313,7 +313,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return model.objects.filter(
-                user=request.user, recipe__id=obj.id).exists()
+                user=request.user,
+                recipe__id=obj.id).exists()
 
     def get_is_favorited(self, obj):
         return self._exist(Favorites, obj)
