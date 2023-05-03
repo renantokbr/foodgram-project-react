@@ -3,7 +3,6 @@ from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import relations, serializers, validators
 from rest_framework.fields import ReadOnlyField
-
 from api.utils import set_of_ingredients
 from recipe.models import (Carts, Favorites, Ingredient, IngredientAmount,
                            Recipe, Tag)
@@ -313,8 +312,9 @@ class RecipeSerializer(serializers.ModelSerializer):
     def _exist(self, model, obj):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
-            return model.objects.filter(user=request.user,
-                                        recipe__id=obj.id).exists()
+            return model.objects.filter(
+                user=request.user,
+                recipe__id=obj.id).exists()
 
     def get_is_favorited(self, obj):
         return self._exist(Favorites, obj)
