@@ -40,9 +40,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./foodgram/Dockerfile
+          file: ./backend/Dockerfile
           push: true
-          tags: blackford/foodgram_backend:workflow
+          tags: blackford/foodgram_backend:latest
   
   deploy:
     runs-on: ubuntu-latest
