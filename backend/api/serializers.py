@@ -3,10 +3,11 @@ from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import relations, serializers, validators
 from rest_framework.fields import ReadOnlyField
+
+from api.utils import set_of_ingredients
 from recipe.models import (Carts, Favorites, Ingredient, IngredientAmount,
                            Recipe, Tag)
 from users.models import Subscriptions, User
-from api.utils import set_of_ingredients
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
