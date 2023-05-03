@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core import validators
 from django.db import models
+
 from users.models import User
 
 

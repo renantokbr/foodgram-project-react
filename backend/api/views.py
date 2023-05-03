@@ -2,9 +2,7 @@
 from django.db.models import F, Sum
 from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import decorators, generics, response, status, viewsets
-from recipe.models import (Carts, Favorites, Ingredient, IngredientAmount,
-                           Recipe, Tag)
-from users.models import Subscriptions, User
+
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginators import Pagination
 from api.permissions import AuthorAndAdmin
@@ -14,6 +12,9 @@ from api.serializers import (FavoriteSerializer, FollowSerializer,
                              SubscribeSerializer, TagSerializer,
                              UserSerializer)
 from api.utils import prepare_file
+from recipe.models import (Carts, Favorites, Ingredient, IngredientAmount,
+                           Recipe, Tag)
+from users.models import Subscriptions, User
 
 
 class UserView(DjoserUserViewSet):
