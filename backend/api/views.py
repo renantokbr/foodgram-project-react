@@ -4,18 +4,13 @@ from recipe.models import (Carts, Favorites, Ingredient, IngredientAmount,
                            Recipe, Tag)
 from rest_framework import decorators, generics, response, status, viewsets
 from users.models import Subscriptions, User
-
 from api.filters import IngredientFilter, RecipeFilter
 from api.paginators import Pagination
 from api.permissions import AuthorAndAdmin
-from api.serializers import (FavoriteSerializer,
-                             FollowSerializer,
-                             GetRecipeSerializer,
-                             IngredientSerializer,
-                             RecipeSerializer,
-                             ShoppingCartSerializer,
-                             SubscribeSerializer,
-                             TagSerializer,
+from api.serializers import (FavoriteSerializer, FollowSerializer,
+                             GetRecipeSerializer, IngredientSerializer,
+                             RecipeSerializer, ShoppingCartSerializer,
+                             SubscribeSerializer, TagSerializer,
                              UserSerializer)
 from api.utils import prepare_file
 
