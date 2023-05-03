@@ -9,3 +9,46 @@
 На этом сервисе пользователи смогут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 
 Посмотреть документацию можно по адресу: http://127.0.0.1/api/docs/redoc.html
+
+# Запуск проекта 
+Склонировать репозиторий на локальную машину:
+```s
+git clone git@github.com:renantokbr/foodgram-project-react.git
+```
+Создать виртуальное окружение и обновить pip
+```s
+python -m venv venv
+source venv/Scripts/activate
+pip install --upgrade pip
+```
+Установить зависимости из файла requirements.txt:
+
+```s
+pip install -r backend/requirements.txt
+```
+
+# Запуск проекта локально в контейнере:
+
+
+
+Выполните миграции:
+```
+docker-compose exec backend python manage.py migrate
+```
+Создайте суперпользователя:
+```
+docker-compose exec backend python manage.py createsuperuser
+```
+Подгрузите статику:
+```
+docker-compose exec backend python manage.py collectstatic --noinput
+```
+Загрузите список ингредиентов в базу данных:
+```
+docker-compose exec backend python manage.py ingredient
+```
+Загрузите список тегов в базу данных:
+```
+docker-compose exec backend python manage.py tags
+```
+# Выполнил студент 48 когорты Брылев Руслан 
