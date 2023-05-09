@@ -1,64 +1,55 @@
-from django.contrib.admin import ModelAdmin, TabularInline, register
-from django.utils.safestring import mark_safe
-
-from .forms import TagForm
-from .models import Ingredient, IngredientAmount, Recipe, Tag
-
-EMPTY_PLACEHOLDER = 'Нет данных'
+from django.contrib import admin
+from .models import (
+    Favorites, Ingredient, IngredientAmount, Recipe, Carts, Tag
+)
 
 
-@register(Ingredient)
-class IngredientAdmin(ModelAdmin):
+class IngredientAdmin(admin.ModelAdmin):
     list_display = ('name', 'measurement_unit')
-    search_fields = ('name',)
-    list_filter = ('name',)
-    empty_value_display = EMPTY_PLACEHOLDER
-    save_on_top = True
+    search_fields = ('^name',)
 
 
-@register(IngredientAmount)
-class IngredientAmountAdmin(ModelAdmin):
-    pass
+class IngredientAmountAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'ingredient', 'amount')
 
 
-class IngredientInline(TabularInline):
+class IngredientAmountInline(admin.TabularInline):
     model = IngredientAmount
-    extra = 0
-    min_num = 1
+    fk_name = 'recipe'
 
 
-@register(Tag)
-class TagAdmin(ModelAdmin):
-    form = TagForm
-    list_display = ('name', 'slug', 'color')
-    prepopulated_fields = {'slug': ('name',)}
-    fieldsets = ((None, {'fields': (('name', 'slug'), 'color')}),)
-    search_fields = ('name',)
-    save_on_top = True
-    empty_value_display = EMPTY_PLACEHOLDER
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe')
 
 
-@register(Recipe)
-class RecipeAdmin(ModelAdmin):
-    list_display = ('name', 'author', 'get_image',
-                    'get_count_added_to_favorite', 'get_ingredients')
-    fields = (('image',), ('name', 'author'),
-              ('tags', 'cooking_time'), ('text',))
-    list_filter = ('name', 'author__username', 'tags')
-    search_fields = ('name', 'author')
-    save_on_top = True
-    empty_value_display = EMPTY_PLACEHOLDER
-    inlines = (IngredientInline,)
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ('author', 'name', 'favorited')
+    list_filter = ('author', 'name', 'tags')
+    exclude = ('ingredients',)
+    search_fields = ('^name',)
 
-    def get_image(self, obj):
-        return mark_safe(f'<img src={obj.image.url} width="80" height="35"')
+    inlines = [
+        IngredientAmountInline,
+    ]
 
-    def get_count_added_to_favorite(self, obj):
-        return obj.favorite.count()
+    @admin.display(empty_value='Никто')
+    def favorited(self, obj):
+        return Favorites.objects.filter(recipe=obj).count()
 
-    def get_ingredients(self, obj):
-        return ', '.join(obj.ingredients.all().values_list('name', flat=True))
+    favorited.short_description = 'Кол-во людей добавивших в избранное'
 
-    get_count_added_to_favorite.short_description = 'Добавлено в избранное'
-    get_image.short_description = 'Изображение'
-    get_ingredients.short_description = 'Ингридиенты'
+
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe')
+
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name', 'color', 'slug')
+
+
+admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(IngredientAmount, IngredientAmountAdmin)
+admin.site.register(Favorites, FavoriteAdmin)
+admin.site.register(Tag, TagAdmin)
+admin.site.register(Carts, ShoppingCartAdmin)
+admin.site.register(Recipe, RecipeAdmin)

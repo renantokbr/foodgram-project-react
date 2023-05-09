@@ -20,20 +20,14 @@ class User(AbstractUser):
         'Фамилия',
         max_length=settings.USER_CHAR_FIELD_LENG,
         blank=False)
-    username = models.CharField(
-        'Уникальное имя',
-        max_length=settings.USER_CHAR_FIELD_LENG, )
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ('email', 'first_name', 'last_name')
+        ordering = ('id',)
 
     def __str__(self):
-        return self.username
+        return self.get_username()
 
 
 class Subscriptions(models.Model):
@@ -41,12 +35,12 @@ class Subscriptions(models.Model):
     author = models.ForeignKey(
         to=User,
         verbose_name='Автор рецепта',
-        related_name='follower',
+        related_name='following',
         on_delete=models.CASCADE,)
-    user = models.ForeignKey(
+    subscriber = models.ForeignKey(
         to=User,
         verbose_name='Подписчики',
-        related_name='following',
+        related_name='subscriber',
         on_delete=models.CASCADE,)
 
     class Meta:
@@ -54,14 +48,10 @@ class Subscriptions(models.Model):
         verbose_name_plural = 'Подписки'
         constraints = (
             models.UniqueConstraint(
-                fields=('author', 'user'),
+                fields=('author', 'subscriber'),
                 name='\nУже подписаны на этого пользователя!\n',
             ),
-            models.CheckConstraint(
-                check=~models.Q(author=models.F('user')),
-                name='\nНельзя подписываться на себя!\n'
-            )
         )
 
     def __str__(self):
-        return f'{self.author.username} -> {self.user.username}'
+        return f'{self.subscriber} подписан на {self.author}'

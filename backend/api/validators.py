@@ -1,13 +1,15 @@
-from rest_framework.serializers import ValidationError
+from rest_framework import exceptions
+from django.contrib.auth import password_validation
+
+BANNED_USERNAMES = (
+    'me', 'set_password',
+)
+
+validate_password = password_validation.validate_password
 
 
-def class_obj_validate(value: str, form: object = None) -> object:
-    if not str(value).isdecimal():
-        raise ValidationError(f'В строке {value} должно быть число.')
-    if form:
-        obj = form.objects.filter(id=value)
-        if not obj:
-            raise ValidationError(f'Объект {type(form)} '
-                                  f'с ID={value} не существует.')
-        return obj[0]
-    return None
+def validate_username(value):
+    value = value.lower()
+    if value in BANNED_USERNAMES:
+        raise exceptions.ValidationError('Некорректное имя пользователя.')
+    return value

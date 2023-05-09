@@ -1,8 +1,11 @@
 from rest_framework import permissions
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
+AllowAny = permissions.AllowAny
+IsAuthenticated = permissions.IsAuthenticated
 
-class AuthorAndAdmin(IsAuthenticatedOrReadOnly):
+
+class AuthorOrAdmin(IsAuthenticatedOrReadOnly):
     """Доступ к изменению контента автору и администратору."""
     message = 'Редактирование доступно только автору или администратору'
 

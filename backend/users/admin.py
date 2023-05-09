@@ -1,46 +1,58 @@
-from django.contrib.admin import register
-from django.contrib.auth.admin import UserAdmin
+from django import forms
+from django.contrib import admin
+from django.contrib.auth import get_user_model, admin as admin_auth, models
+from django.core import exceptions
 
-from .models import User
+from .models import Subscriptions
 
 
-@register(User)
-class FoodgramUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name',
-                    'get_recipe_count', 'get_subs_count')
-    fieldsets = (
-        (
-            None, {
-                'fields': (
-                    ('username', 'email'),
-                    ('first_name', 'last_name'),
-                    ('date_joined',),
-                    ('password',)
-                ),
-            }
-        ),
-        (
-            'Права доступа', {
-                'classes': ('collapse',),
-                'fields': (
-                    'is_active',
-                    'is_superuser',
-                    'is_staff'
-                ),
-            }
-        )
+User = get_user_model()
+
+
+class UserCreationForm(forms.ModelForm):
+    email = forms.EmailField(label='Почта')
+    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Подтверждение пароля', widget=forms.PasswordInput)
+
+    class Meta:
+        model = User
+        fields = ('email', 'username', 'first_name', 'last_name')
+
+    def clean_password2(self):
+        password1 = self.cleaned_data.get('password1')
+        password2 = self.cleaned_data.get('password2')
+        if password1 and password2 and password1 != password2:
+            raise exceptions.ValidationError('Пароли не совпадают!')
+        return password2
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data.get('password1'))
+        if commit:
+            user.save()
+        return user
+
+
+class UserAdmin(admin_auth.UserAdmin):
+    add_form = UserCreationForm
+
+    list_display = (
+        'username', 'email', 'first_name', 'last_name', 'is_staff'
     )
+    list_filter = ('email', 'username')
+    fieldsets = (
+        ('Данные профиля', {'fields': ('username', 'email', 'password',)}),
+        ('Персональные данные', {'fields': ('first_name', 'last_name',)}),
+        ('Права доступа', {'fields': ('is_staff',)}),
+    )
+    search_fields = ('^email', '^username')
+    ordering = ('email',)
 
-    def get_recipe_count(self, obj):
-        return obj.recipes.count()
 
-    def get_subs_count(self, obj):
-        return obj.follower.count()
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('author', 'subscriber')
 
-    get_recipe_count.short_description = 'Рецептов'
-    get_subs_count.short_description = 'Подписчиков'
 
-    search_fields = ('username', 'email')
-    list_filter = ('username', 'first_name', 'email')
-    save_on_top = True
-    empty_value_display = '-пусто-'
+admin.site.unregister(models.Group)
+admin.site.register(User, UserAdmin)
+admin.site.register(Subscriptions, SubscriptionAdmin)

@@ -48,3 +48,13 @@ volumes:
   postgres_data:
   static_value:
   media_value:
+
+
+    #def get_serializer_context(self):
+    #    return {
+    #        'request': self.request,
+    #        'format': self.format_kwarg,
+    #        'view': self,
+    #        'subscriptions': set(User.objects.filter(
+    #            user_id=self.request.user).values_list('author_id', flat=True))
+    #    }
