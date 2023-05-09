@@ -1,10 +1,10 @@
 from django import forms
 from django.contrib import admin
-from django.contrib.auth import get_user_model, admin as admin_auth, models
+from django.contrib.auth import admin as admin_auth
+from django.contrib.auth import get_user_model, models
 from django.core import exceptions
 
 from .models import Subscriptions
-
 
 User = get_user_model()
 
@@ -12,7 +12,8 @@ User = get_user_model()
 class UserCreationForm(forms.ModelForm):
     email = forms.EmailField(label='Почта')
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Подтверждение пароля', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Подтверждение пароля',
+                                widget=forms.PasswordInput)
 
     class Meta:
         model = User

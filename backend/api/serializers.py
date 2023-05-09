@@ -1,11 +1,12 @@
 from django.contrib.auth import get_user_model
-from django.db import transaction, IntegrityError
+from django.db import IntegrityError, transaction
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
+from recipe.models import (Carts, Favorites, Ingredient, IngredientAmount,
+                           Recipe, Tag)
 from users.models import Subscriptions
-from recipe.models import (Ingredient, IngredientAmount,
-                           Recipe, Tag, Favorites, Carts)
+
 from . import validators
 
 User = get_user_model()

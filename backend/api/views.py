@@ -3,17 +3,13 @@ from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.http import HttpResponse
-from rest_framework import (viewsets,
-                            decorators,
-                            response,
-                            mixins,
-                            status,
-                            exceptions)
+from rest_framework import (decorators, exceptions, mixins, response, status,
+                            viewsets)
 
-from users import models as models_user
 from recipe import models as models_recipe
+from users import models as models_user
 
-from . import permissions, paginators, serializers, filters
+from . import filters, paginators, permissions, serializers
 
 User = get_user_model()
 
