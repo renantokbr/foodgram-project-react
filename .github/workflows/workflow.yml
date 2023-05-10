@@ -42,7 +42,7 @@ jobs:
           context: .
           file: ./backend/Dockerfile
           push: true
-          tags: blackford/foodgram11_backend:workflow
+          tags: blackford/foodgram_backend:workflow
   
   deploy:
     runs-on: ubuntu-latest
