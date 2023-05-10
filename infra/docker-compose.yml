@@ -22,10 +22,9 @@ services:
       - ./.env
 
   frontend:
-    image: blackford/foodgram_front:latest
-    volumes:
-      - ../frontend/:/app/result_build/
-      - static_value:/var/html/static/
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
     restart: always
@@ -39,7 +38,7 @@ services:
     volumes:
       - static_value:/static/
       - media_value:/media/
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
     depends_on:
@@ -49,3 +48,13 @@ volumes:
   postgres_data:
   static_value:
   media_value:
+
+
+    #def get_serializer_context(self):
+    #    return {
+    #        'request': self.request,
+    #        'format': self.format_kwarg,
+    #        'view': self,
+    #        'subscriptions': set(User.objects.filter(
+    #            user_id=self.request.user).values_list('author_id', flat=True))
+    #    }
